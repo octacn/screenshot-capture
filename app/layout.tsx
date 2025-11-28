@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { Hanken_Grotesk, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-import MaxWidthWrapper from "@/components/max-width-wrapper";
+import type { Metadata } from "next";
+import { Hanken_Grotesk, Inter } from "next/font/google";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,9 +33,7 @@ export default function RootLayout({
         )}
         cz-shortcut-listen="true"
       >
-        <MaxWidthWrapper>
-          {children}
-        </MaxWidthWrapper>
+        {children}
       </body>
     </html>
   );

@@ -1,7 +1,19 @@
+import MaxWidthWrapper from "@/components/max-width-wrapper";
+// import ScreenshotWindow from "@/components/screenshot-window";
+import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
+
 export default function Page() {
   return (
-    <div className="h-screen flex items-center justify-center font-mono text-2xl">
-      Project Started
-    </div>
+    <MaxWidthWrapper>
+      <SiteHeader />
+      {/* <ScreenshotWindow /> */}
+      {/* <div className="bg-red-500  max-h-52 overflow-y-scroll" >
+<div className="h-96 bg-green-300">
+hello 
+  </div>      </div> */}
+      <div className="bg-primary">hello project page</div>
+      <SiteFooter />
+    </MaxWidthWrapper>
   );
 }
