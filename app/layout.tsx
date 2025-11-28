@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
+import { Hanken_Grotesk, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import MaxWidthWrapper from "@/components/max-width-wrapper";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const mono = Hanken_Grotesk({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -26,10 +27,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn("antialiased", geistSans.variable, geistMono.variable)}
+        className={cn(
+          "font-inter tracking-wide font-normal antialiased",
+          mono.variable,
+          inter.variable
+        )}
         cz-shortcut-listen="true"
       >
-        {children}
+        <MaxWidthWrapper>
+          {children}
+        </MaxWidthWrapper>
       </body>
     </html>
   );
