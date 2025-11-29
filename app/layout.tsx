@@ -5,6 +5,7 @@ import { Hanken_Grotesk, Inter } from "next/font/google";
 import { MaxWidthWrapperLayout } from "@/components/max-width-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 import { META_THEME_COLORS } from "@/hooks/meta-colors";
+import Internet from "@/components/internet";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -60,7 +61,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <MaxWidthWrapperLayout>{children}</MaxWidthWrapperLayout>
+          <MaxWidthWrapperLayout>
+            <Internet />
+            {children}
+          </MaxWidthWrapperLayout>
         </ThemeProvider>
       </body>
     </html>

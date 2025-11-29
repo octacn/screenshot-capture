@@ -1,38 +1,64 @@
-import { screenshot } from "@/lib/screenshot";
-import { ImageType, ScreenshotSchema } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
-
-const contentTypeMap: Record<ImageType, string> = {
-  png: "image/png",
-  jpeg: "image/jpeg",
-  webp: "image/webp",
-};
+import puppeteer from "puppeteer";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const parseResult = ScreenshotSchema.safeParse(body);
+  const { url } = body;
+  console.log("url", url);
 
-  if (!parseResult.success) {
-    return NextResponse.json(
-      { error: parseResult.error.issues },
-      { status: 400 }
-    );
-  }
-
-  const { url, width, height, imageType = "png", theme } = parseResult.data;
+  const browser = await puppeteer.launch({
+    defaultViewport: {
+      width: body.width || 1440,
+      height: body.height || 900,
+      deviceScaleFactor: 2,
+    },
+  });
 
   try {
-    const result = await screenshot({ url, width, height, imageType, theme });
+    const url = body.url || "https://axisbuddy.com";
+    const theme = body.theme || "light";
+    const imageType = body.imageType || "png";
 
-    return new NextResponse(new Uint8Array(result.image), {
+    if (!url) {
+      throw new Error("URL is required");
+    }
+
+    const page = await browser.newPage();
+
+    await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      // timeout: 60000,
+    });
+
+    console.log(`- Capturing ${url}...`);
+
+    await page.evaluate((currentTheme) => {
+      localStorage.setItem("theme", currentTheme);
+    }, theme);
+
+    const screenshotBuffer = await page.screenshot({
+      type: imageType as "png" | "jpeg" | "webp",
+      fullPage: body.fullPage || false,
+    });
+
+    await page.close();
+    await browser.close();
+
+    return new NextResponse(Buffer.from(screenshotBuffer), {
+      status: 200,
       headers: {
-        "Content-Type": contentTypeMap[imageType],
+        "Content-Type": `image/${imageType}`,
+        "Content-Length": screenshotBuffer.length.toString(),
       },
     });
   } catch (error) {
+    await browser.close();
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : String(error) },
+      {
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      },
       { status: 500 }
     );
   }
