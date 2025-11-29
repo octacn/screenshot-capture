@@ -3,7 +3,7 @@
 import { useScreenshotStorage } from "@/hooks/use-screenshot-storage";
 import Image from "next/image";
 
-export default function ImagePreviewer() {
+export default function ImagePreviewHome() {
   const { screenshot, hasScreenshot } = useScreenshotStorage();
 
   if (!hasScreenshot) {
