@@ -1,22 +1,36 @@
-import { useId } from "react";
-
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
-export default function Component({ title }: { title: string }) {
-  const id = useId();
+export interface SelectOptionProps {
+  title: string;
+  items: {
+    id: string;
+    label: string;
+  }[];
+  defaultValue: number;
+  onValueChange?: (value: string) => void;
+}
+
+export function SelectOption({ ...props }: SelectOptionProps) {
   return (
-    <Select defaultValue="1">
-      <SelectTrigger id={id} size="sm">
-        {title}
+    <Select
+      onValueChange={props.onValueChange}
+      defaultValue={props.items[Number(props.defaultValue) - 1].id}
+    >
+      <SelectTrigger size="sm">
+        <SelectValue placeholder={props.title} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="1">Javascript</SelectItem>
-        <SelectItem value="2">Bash</SelectItem>
+        {props.items.map((item) => (
+          <SelectItem key={item.id} value={item.id}>
+            {item.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

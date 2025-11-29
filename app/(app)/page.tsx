@@ -1,7 +1,7 @@
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
-import ImagePreviewHome from "@/components/_image/image-preview-home";
+import { ImagePreviewHome } from "@/components/image-components";
 
 export default function Page() {
   return (

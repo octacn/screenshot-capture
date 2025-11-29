@@ -1,25 +1,21 @@
+import { ImageType } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { url } = body;
-  console.log("url", url);
+  const { url, theme, imageType, height, width } = body;
 
   const browser = await puppeteer.launch({
     defaultViewport: {
-      width: body.width || 1440,
-      height: body.height || 900,
+      width: width,
+      height: height,
       deviceScaleFactor: 2,
     },
   });
 
   try {
-    const url = body.url || "https://axisbuddy.com";
-    const theme = body.theme || "light";
-    const imageType = body.imageType || "png";
-
     if (!url) {
       throw new Error("URL is required");
     }
@@ -31,14 +27,12 @@ export async function POST(req: NextRequest) {
       // timeout: 60000,
     });
 
-    console.log(`- Capturing ${url}...`);
-
     await page.evaluate((currentTheme) => {
       localStorage.setItem("theme", currentTheme);
     }, theme);
 
     const screenshotBuffer = await page.screenshot({
-      type: imageType as "png" | "jpeg" | "webp",
+      type: imageType as ImageType,
       fullPage: body.fullPage || false,
     });
 
