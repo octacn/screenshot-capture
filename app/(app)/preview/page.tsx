@@ -3,12 +3,12 @@
 import { useScreenshotStorage } from "@/hooks/use-screenshot-storage";
 import PreviewFooter from "@/components/preview-footer";
 import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import * as React from "react";
 
 export default function Page() {
   const { screenshot, hasScreenshot } = useScreenshotStorage();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!hasScreenshot) {
       redirect("/");
     }
@@ -20,6 +20,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen pb-24">
+      <PreviewFooter />
       <div className="p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-4">
@@ -28,7 +29,8 @@ export default function Page() {
               Captured from: {screenshot?.url}
             </p>
             <p className="text-xs text-muted-foreground">
-              {screenshot?.capturedAt && new Date(screenshot.capturedAt).toLocaleString()}
+              {screenshot?.capturedAt &&
+                new Date(screenshot.capturedAt).toLocaleString()}
             </p>
           </div>
           <div className="border rounded-lg overflow-hidden shadow-lg">
@@ -40,7 +42,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <PreviewFooter />
     </div>
   );
 }

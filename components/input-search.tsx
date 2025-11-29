@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import {
   InputGroup,
   InputGroupAddon,
@@ -13,15 +13,10 @@ import { useCaptureScreenshot } from "@/hooks/capture-screenshot";
 export function InputSearch() {
   const [url, setUrl] = React.useState<string>("");
   const { capture, loading } = useCaptureScreenshot();
-  const router = useRouter();
 
   const handleCapture = async () => {
     if (!url.trim()) return;
-
-    const result = await capture({ url: `https://${url}` });
-    if (result) {
-      router.push("/preview");
-    }
+    await capture({ url: `https://${url}` });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
