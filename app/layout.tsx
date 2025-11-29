@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Inter } from "next/font/google";
 import { MaxWidthWrapperLayout } from "@/components/max-width-wrapper";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme-toggler";
 import { META_THEME_COLORS } from "@/hooks/meta-colors";
 import Internet from "@/components/internet";
 

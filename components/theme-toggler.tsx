@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useTheme } from "next-themes";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
-export function ThemeToggler() {
+function ThemeToggler() {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -57,3 +58,12 @@ function ThemeToggleButton({
     />
   );
 }
+
+function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+}
+
+export { ThemeToggler, ThemeProvider };
