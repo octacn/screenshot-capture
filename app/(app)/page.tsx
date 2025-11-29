@@ -1,7 +1,8 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 // import ScreenshotWindow from "@/components/screenshot-window";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
+// import {ThemeToggler} from "@/components/theme-toggler";
 
 export default function Page() {
   return (
@@ -12,7 +13,9 @@ export default function Page() {
 <div className="h-96 bg-green-300">
 hello 
   </div>      </div> */}
-      <div className="bg-primary">hello project page</div>
+
+      <div className="h-[calc(100vh-112px)]">hello project page</div>
+
       <SiteFooter />
     </MaxWidthWrapper>
   );

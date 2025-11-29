@@ -1,19 +1,18 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
-export default function MaxWidthWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function MaxWidthWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <main
-      className={cn(
-        "relative max-w-screen-2xl mx-auto",
-        "overflow-hidden max-h-screen min-h-screen w-screen"
-      )}
-    >
+    <section className={cn("overflow-hidden max-h-screen min-h-screen")}>
       {children}
-    </main>
+    </section>
   );
 }
+
+function MaxWidthWrapperLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <main className={cn("relative max-w-screen-2xl mx-auto")}>{children}</main>
+  );
+}
+
+export { MaxWidthWrapperLayout, MaxWidthWrapper };
