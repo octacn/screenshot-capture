@@ -23,7 +23,7 @@ export default function SiteFooter() {
       </p>
 
       <div className="flex gap-x-2">
-        {[1, 2, 3, 4, 5].map((idx) => (
+        {[1, 2, 3].map((idx) => (
           <IconBox key={idx}>
             <Icons.laptop />
           </IconBox>
