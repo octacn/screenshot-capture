@@ -9,12 +9,14 @@ function Box({ children, className }: React.ComponentProps<"section">) {
 function BoxButton({
   children,
   className,
+  ...props
 }: React.ComponentProps<typeof Button>) {
   return (
     <Button
       variant={"secondary"}
       size={"sm"}
       className={cn("skill-inner-shadow", className)}
+      {...props}
     >
       {children}
     </Button>
