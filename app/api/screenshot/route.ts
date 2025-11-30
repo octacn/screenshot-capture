@@ -1,6 +1,6 @@
 import { ImageType } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 
 export async function POST(req: NextRequest) {
