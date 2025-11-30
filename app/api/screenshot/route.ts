@@ -1,6 +1,7 @@
 import { ImageType } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -8,6 +9,10 @@ export async function POST(req: NextRequest) {
   const { url, theme, imageType, height, width } = body;
 
   const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: true,
+
     defaultViewport: {
       width: width,
       height: height,
