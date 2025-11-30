@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Box, IconBox } from "@/components/box";
-import { Icons } from "@/components/icons";
 import { ThemeToggler } from "@/components/theme-toggler";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, socialItems } from "@/lib/config";
 
 export default function SiteFooter() {
   return (
@@ -23,10 +22,10 @@ export default function SiteFooter() {
       </p>
 
       <div className="flex gap-x-2">
-        {[1, 2, 3].map((idx) => (
-          <IconBox key={idx}>
-            <Icons.laptop />
-          </IconBox>
+        {socialItems.map((item) => (
+          <Link key={item.href} href={item.href}>
+            <IconBox>{item.icon}</IconBox>
+          </Link>
         ))}
       </div>
     </Box>

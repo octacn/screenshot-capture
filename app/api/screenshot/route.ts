@@ -1,21 +1,12 @@
 import { ImageType } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer";
-import chromium from "@sparticuz/chromium";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { url, theme, imageType, height, width } = body;
 
-  process.env.FONTCONFIG_PATH = "/tmp/fonts";
-  process.env.XDG_CACHE_HOME = "/tmp";
-
   const browser = await puppeteer.launch({
-    executablePath: await chromium.executablePath(),
-    args: chromium.args,
-    headless: true,
-    ignoreDefaultArgs: ["--disable-extensions"],
-
     defaultViewport: {
       width: width,
       height: height,
@@ -38,7 +29,7 @@ export async function POST(req: NextRequest) {
       localStorage.setItem("theme", currentTheme);
     }, theme);
 
-    // await new Promise((resolve) => setTimeout(resolve, 30000));
+    await new Promise((resolve) => setTimeout(resolve, 30000));
 
     const screenshotBuffer = await page.screenshot({
       type: imageType as ImageType,
