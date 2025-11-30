@@ -24,12 +24,13 @@ export async function POST(req: NextRequest) {
 
     await page.goto(url, {
       waitUntil: "domcontentloaded",
-      // timeout: 60000,
     });
 
     await page.evaluate((currentTheme) => {
       localStorage.setItem("theme", currentTheme);
     }, theme);
+
+    await new Promise((resolve) => setTimeout(resolve, 30000));
 
     const screenshotBuffer = await page.screenshot({
       type: imageType as ImageType,

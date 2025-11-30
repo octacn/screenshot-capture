@@ -16,6 +16,7 @@ import { useCaptureScreenshot } from "@/hooks/capture-screenshot";
 import { ScreenshotSchema, Theme } from "@/types/screenshot-type";
 import { DownloadButton, ResetButton } from "@/components/image-components";
 import { Repeat2 } from "lucide-react";
+import { useScreenshotStorage } from "@/hooks/use-screenshot-storage";
 
 export default function SiteHeader() {
   const [url, setUrl] = React.useState<string>("");
@@ -26,9 +27,11 @@ export default function SiteHeader() {
     React.useState<ScreenshotSchema["imageType"]>("png");
 
   const { capture, loading } = useCaptureScreenshot();
+  const { clearScreenshot } = useScreenshotStorage();
 
   const handleCapture = async () => {
     if (!url.trim()) return;
+    clearScreenshot();
     await capture({
       url: `https://${url}`,
       theme,
@@ -127,7 +130,7 @@ export default function SiteHeader() {
             Preview
             <Link href={"/preview"} className="absolute inset-0" />
           </BoxButton>
-          <DownloadButton name={url} />
+          <DownloadButton />
         </ButtonGroup>
       </div>
     </Box>

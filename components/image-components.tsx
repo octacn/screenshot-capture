@@ -1,18 +1,20 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { BoxButton, Box } from "@/components/box";
+import { motion, AnimatePresence } from "motion/react";
+import { BoxButton } from "@/components/box";
 import { useScreenshotStorage } from "@/hooks/use-screenshot-storage";
+import { BadgeInfo } from "lucide-react";
+// import { useCaptureScreenshot } from "@/hooks/capture-screenshot";
 
-function DownloadButton({ name }: { name: string }) {
-  const { downloadScreenshot } = useScreenshotStorage();
+function DownloadButton() {
+  const { downloadScreenshot, screenshot } = useScreenshotStorage();
 
   const handleDownload = () => {
-    const clearName = name
-      ? name
+    const clearName = screenshot?.url
+      ? screenshot.url
           .replace(/(^\w+:|^)\/\//, "")
           .replace(/[^a-z0-9]/gi, "-")
           .toLowerCase()
@@ -20,7 +22,11 @@ function DownloadButton({ name }: { name: string }) {
     downloadScreenshot(clearName);
   };
 
-  return <BoxButton onClick={handleDownload}>Download</BoxButton>;
+  return (
+    <BoxButton className="cursor-pointer" onClick={handleDownload}>
+      Download
+    </BoxButton>
+  );
 }
 
 function ResetButton({
@@ -34,7 +40,12 @@ function ResetButton({
   };
 
   return (
-    <BoxButton onClick={handleCaptureNew} {...props} disabled={!hasScreenshot}>
+    <BoxButton
+      className="cursor-pointer"
+      onClick={handleCaptureNew}
+      {...props}
+      disabled={!hasScreenshot}
+    >
       {children}
     </BoxButton>
   );
@@ -42,6 +53,16 @@ function ResetButton({
 
 function ImagePreviewHome() {
   const { screenshot, hasScreenshot } = useScreenshotStorage();
+  // const { loading } = useCaptureScreenshot();
+
+  // if (loading) {
+  //   return (
+  //     <div className="flex flex-col font-mono items-center justify-center text-center h-full">
+  //       <p className="text-foreground/80 text-xl">Capturing screenshot...</p>
+  //       <p className="text-muted-foreground mt-1">Please wait a moment.</p>
+  //     </div>
+  //   );
+  // }
 
   if (!hasScreenshot) {
     return (
@@ -79,74 +100,144 @@ function ImagePreviewPage() {
   if (!hasScreenshot) {
     return null;
   }
+
   return (
-    <div className="min-h-screen pb-24">
-      <div className="p-4 md:p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-4">
-            <h1 className="text-2xl font-bold">Screenshot Preview</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Captured from: {screenshot?.url}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {screenshot?.capturedAt &&
-                new Date(screenshot.capturedAt).toLocaleString()}
-            </p>
-          </div>
-          <div className="border rounded-lg overflow-hidden shadow-lg">
-            <Image
-              width={100}
-              height={100}
-              src={screenshot?.imageData as string}
-              alt={screenshot?.url as string}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
+    <section className="p-4">
+      <PreviewDetails />
+
+      <div className="border rounded-lg overflow-hidden shadow-lg">
+        <Image
+          width={100}
+          height={100}
+          src={screenshot?.imageData as string}
+          alt={screenshot?.url as string}
+          className="w-full h-auto"
+        />
       </div>
-    </div>
+    </section>
   );
 }
 
-function PreviewHeader() {
-  const { downloadScreenshot, clearScreenshot, hasScreenshot } =
-    useScreenshotStorage();
+function PreviewDetails() {
+  const { screenshot } = useScreenshotStorage();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const detailsRef = React.useRef<HTMLDivElement>(null);
 
-  const handleDownload = () => {
-    downloadScreenshot();
-  };
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        !detailsRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
 
-  const handleCaptureNew = () => {
-    clearScreenshot();
-  };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
-    <Box className="fixed top-0 left-0 right-0 z-30 w-full h-20 bg-surface border-t border-border flex items-center justify-between">
-      <Link href={"/"}>
-        <BoxButton variant={"secondary"} className="rounded-full" size={"lg"}>
-          Back to home
-        </BoxButton>
-      </Link>
-      <BoxButton
-        variant={"secondary"}
-        className="rounded-full"
-        size={"lg"}
-        onClick={handleDownload}
-        disabled={!hasScreenshot}
+    <section className="w-fit absolute top-4 right-4 z-10 shadow-lg">
+      <div
+        ref={detailsRef}
+        className="rounded-lg border bg-surface py-3 px-5 btn-inner-shadow"
       >
-        Download
-      </BoxButton>
-      <Link href={"/"}>
-        <BoxButton
-          variant={"secondary"}
-          className="rounded-full"
-          size={"lg"}
-          onClick={handleCaptureNew}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 w-full font-medium transition-all"
         >
-          Capture New
-        </BoxButton>
-      </Link>
-    </Box>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="rounded-full"
+          >
+            <BadgeInfo />
+          </motion.div>
+          <AnimatePresence initial={false}>
+            {isOpen && (
+              <motion.span
+                initial={{ opacity: 0, x: -10, width: 0 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  width: "auto",
+                  transition: {
+                    opacity: { duration: 0.3, ease: "easeOut" },
+                    x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                    width: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                  },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -10,
+                  width: 0,
+                  transition: {
+                    opacity: { duration: 0.2, ease: "easeIn" },
+                    x: { duration: 0.2, ease: [0.4, 0, 1, 1] },
+                    width: { duration: 0.2, ease: [0.4, 0, 1, 1] },
+                  },
+                }}
+                className="overflow-hidden whitespace-nowrap"
+              >
+                Screenshot Details
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0, scale: 0.95 }}
+              animate={{
+                height: "auto",
+                opacity: 1,
+                scale: 1,
+                transition: {
+                  height: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+                  opacity: { duration: 0.3, ease: "easeOut" },
+                  scale: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                },
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                scale: 0.95,
+                transition: {
+                  height: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                  opacity: { duration: 0.2, ease: "easeIn" },
+                  scale: { duration: 0.2, ease: [0.4, 0, 1, 1] },
+                },
+              }}
+              className="overflow-hidden origin-top"
+            >
+              <motion.div
+                className="text-sm text-muted-foreground mt-2.5"
+                initial={{ y: -10 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
+              >
+                <p>Captured from: {screenshot?.url}</p>
+                <p>
+                  Captured at:{" "}
+                  {screenshot?.capturedAt &&
+                    new Date(screenshot.capturedAt).toLocaleString()}
+                </p>
+                <div className="grid grid-cols-2 gap-x-2 mt-2.5">
+                  <DownloadButton />
+                  <ResetButton>Capture New</ResetButton>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
   );
 }
 
