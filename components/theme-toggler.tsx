@@ -8,6 +8,11 @@ import { cn } from "@/lib/utils";
 
 function ThemeToggler() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div
@@ -17,7 +22,7 @@ function ThemeToggler() {
       <ThemeToggleButton
         aria-label="System theme"
         onClick={() => setTheme("system")}
-        isActive={theme === "system"}
+        isActive={mounted && theme === "system"}
       >
         <Icons.laptop />
       </ThemeToggleButton>
@@ -25,7 +30,7 @@ function ThemeToggler() {
       <ThemeToggleButton
         aria-label="Light theme"
         onClick={() => setTheme("light")}
-        isActive={theme === "light"}
+        isActive={mounted && theme === "light"}
       >
         <Icons.sun />
       </ThemeToggleButton>
@@ -33,7 +38,7 @@ function ThemeToggler() {
       <ThemeToggleButton
         aria-label="Dark theme"
         onClick={() => setTheme("dark")}
-        isActive={theme === "dark"}
+        isActive={mounted && theme === "dark"}
       >
         <Icons.moon />
       </ThemeToggleButton>
