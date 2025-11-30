@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     args: chromium.args,
     headless: true,
     ignoreDefaultArgs: ["--disable-extensions"],
-    
+
     defaultViewport: {
       width: width,
       height: height,

@@ -1,8 +1,9 @@
 {
+  "installCommand": "pnpm install --unsafe-perm",
   "functions": {
     "app/api/**": {
-      "maxDuration": 30,
-      "memory": 1024
+      "memory": 1024,
+      "maxDuration": 30
     }
   }
 }
