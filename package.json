@@ -8,6 +8,14 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "pnpm": {
+    "allowBuild": [
+      "puppeteer",
+      "@sparticuz/chromium",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "@puppeteer/browsers": "^2.10.13",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
