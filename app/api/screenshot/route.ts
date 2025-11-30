@@ -7,6 +7,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { url, theme, imageType, height, width } = body;
 
+  process.env.FONTCONFIG_PATH = "/tmp/fonts";
+  process.env.XDG_CACHE_HOME = "/tmp";
+
   const browser = await puppeteer.launch({
     executablePath: await chromium.executablePath(),
     args: chromium.args,
