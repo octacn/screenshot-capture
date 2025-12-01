@@ -1,12 +1,24 @@
 import { ImageType } from "@/types/screenshot-type";
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { url, theme, imageType, height, width } = body;
+  const { url, theme, imageType, width, height } = body;
+
+  const isProduction = process.env.NODE_ENV === "production";
 
   const browser = await puppeteer.launch({
+    args: isProduction ? chromium.args : puppeteer.defaultArgs(),
+    executablePath: isProduction
+      ? await chromium.executablePath()
+      : process.platform === "win32"
+      ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      : process.platform === "linux"
+      ? "/usr/bin/google-chrome"
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    headless: true,
     defaultViewport: {
       width: width,
       height: height,
